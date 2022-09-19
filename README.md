@@ -1,4 +1,7 @@
 # fast-groovy-scripts
+
+![example workflow](https://github.com/skopylov58/fast-groovy-scripts/actions/workflows/gradle.yml/badge.svg) 
+
 AST transformation to run your Groovy scripts with @CompileStatic
 
 Lets you have some Groovy script which operates on some business object, say Person.
