@@ -2,7 +2,9 @@
 
 ![example workflow](https://github.com/skopylov58/fast-groovy-scripts/actions/workflows/gradle.yml/badge.svg) 
 
-AST transformation to run your Groovy scripts with @CompileStatic
+## AST transformation to run your Groovy scripts with @CompileStatic
+
+### Intro 
 
 Lets you have some Groovy script which operates on some business object, say Person.
 
@@ -23,7 +25,6 @@ public class Script_xxxxxx {
     ...
 }
 ```
-
 You can try improve your's script performance in the following way:
 
 - move your business logic into separate method (say `runFast`)
@@ -58,6 +59,27 @@ public class Script_xxxxxx {
 ```
 
 `ScriptCompileStaticTransformation` does this trick for you automatically.
+
+### Usage
+
+```java
+        var cc = new CompilerConfiguration();
+        var trans = new ScriptCompileStaticTransformer("person", Person.class.getName(), "runFast");
+        cc.addCompilationCustomizers(new ASTTransformationCustomizer(trans));
+                
+        GroovyClassLoader cl = new GroovyClassLoader(this.getClass().getClassLoader(), cc);
+        Class<?> clazz = cl.parseClass(script);
+        Script script = (Script) clazz.getConstructor().newInstance();
+        
+        script.setBinding(new Binding(Map.of("person", new Person)));
+        script.run();
+```
+
+### Performance benchmarking
+
+JMH benchmarking shows aprox. 10 times improvements in script performance.
+
+
 
 
 
