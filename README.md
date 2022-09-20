@@ -44,22 +44,6 @@ Improved Groovy script
     }
 ```
 
-Compiled script now will look as follows:
-
-```java
-public class Script_xxxxxx {
-    ...
-    public Object run() {
-        return runFast(person)
-    }
-    ...
-    @CompileStatic
-    public Object runFast(Person person) {
-        person.name = 'Peter'
-    }
-    ...
-}
-```
 Fortunately, you don't need to do this manually. `ScriptCompileStaticTransformation` does this trick for you automatically.
 
 ### Usage
@@ -85,6 +69,33 @@ Add this transformation to the `CompilerConfiguration` as compilation customizer
         script.setBinding(new Binding(Map.of("person", new Person)));
         script.run();
 ```
+
+Lets compare effect of using transformation. Below is de-compiled script class without transformation. We can see that generated code is using Groovy run-time class `ScriptBytecodeAdapter` to set property `name` to `Peter`.
+
+```java
+	public Object run() {
+        final String s = "Peter";
+        ScriptBytecodeAdapter.setProperty((Object)s, (Class)null, invokedynamic(getProperty:(LScript_d3898d5a433b8e078e9312b6638140ff;)Ljava/lang/Object;, this), (String)"name");
+        return s;
+    }
+
+```
+
+With using transformation, de-compiled class is the following:
+
+```java
+	public Object run() {
+        return invokedynamic(invoke:(LScript_d3898d5a433b8e078e9312b6638140ff;Ljava/lang/Object;)Ljava/lang/Object;, this, invokedynamic(getProperty:(LScript_d3898d5a433b8e078e9312b6638140ff;)Ljava/lang/Object;, this));
+    }
+
+	public Object runFast(final Person person) {
+		final String name = "Peter";
+		person.setName(name);
+		return name;
+	}
+
+```
+Now method `run` invokes `runFast`, which is compiled statically.
 
 ### Error detection
 
