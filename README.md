@@ -2,7 +2,7 @@
 
 ![example workflow](https://github.com/skopylov58/fast-groovy-scripts/actions/workflows/gradle.yml/badge.svg) 
 
-## AST transformation to run your Groovy scripts with @CompileStatic
+## AST (Abstract Syntax Tree) transformation to run your Groovy scripts with @CompileStatic
 
 ### Intro 
 
