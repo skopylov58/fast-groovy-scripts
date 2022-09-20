@@ -13,7 +13,7 @@ Groovy script
     person.name = 'Peter'
 ```
 
-Groovy has absolutely great @CompileStatic feature, which makes Groovy compile code in a statical way (like Java compiler does) and significantly speedup script execution, but in case of plain scripts there is no place to apply this annotation. You know @CompileStatic annotation can be applied either on class or method level. First lets see how we can solve this problem manually.
+Groovy has absolutely great @CompileStatic feature, which makes Groovy compile code in a statical way (like Java compiler does) and significantly speedup script execution, but in case of plain scripts there is no place to apply this annotation. You know @CompileStatic annotation can be applied either on class or method level. So lets see how we can solve this problem manually.
 
 Groovy compiler will create Script class which will put your script code into the `run` method, like this:
 
@@ -52,7 +52,7 @@ Create `ScriptCompileStaticTransformation` transformation. Constructor requires 
 
 - script parameter name, in our case this is "person"
 - script parameter type, in our case Person class
-- method name which will contain script code and will be annotated with @CompileStatic
+- method name which will contain script code and will be annotated with @CompileStatic, in our case `runFast`
 
 Add this transformation to the `CompilerConfiguration` as compilation customizer. Then compile your code with `GroovyClassLoader` and run script providing Person parameter with binding.
 
@@ -70,7 +70,7 @@ Add this transformation to the `CompilerConfiguration` as compilation customizer
     script.run();
 ```
 
-Lets compare effect of using transformation. Below is de-compiled script class without transformation. We can see that generated code is using Groovy run-time class `ScriptBytecodeAdapter` to set property `name` to `Peter`.
+Lets compare effect of using this transformation. Below is de-compiled initial script class (without transformation). We can see that generated code is using Groovy run-time class `ScriptBytecodeAdapter` to set property `name` to `Peter`.
 
 ```java
     public Object run() {
