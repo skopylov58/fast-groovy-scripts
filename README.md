@@ -95,7 +95,7 @@ With using transformation, de-compiled class is the following:
 	}
 
 ```
-Now method `run` invokes `runFast`, which is compiled statically.
+Now method `run` invokes `runFast`, which is compiled statically, `name` property is set directly with property setter `setName`.
 
 ### Error detection
 
@@ -121,8 +121,14 @@ So using @CompileStatic will make your scripts not only more performant but also
 
 ### Performance benchmarking
 
-JMH benchmarking shows aprox. 10 times improvements in script performance.
+JMH benchmarking shows approximately 7 times improvements in script performance.
 
+```
+Benchmark                                                  Mode  Cnt          Score        Error  Units
+CompileStaticTransformationBench.benchDynamic             thrpt   25   15594419.123 ± 115527.449  ops/s
+CompileStaticTransformationBench.benchStaticRun           thrpt   25  112633196.130 ±  46027.272  ops/s
+
+```
 
 
 
