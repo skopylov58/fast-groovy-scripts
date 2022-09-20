@@ -89,10 +89,10 @@ With using transformation, de-compiled class is the following:
     }
 
     public Object runFast(final Person person) {
-		final String name = "Peter";
-		person.setName(name);
-		return name;
-	}
+        final String name = "Peter";
+        person.setName(name);
+        return name;
+    }
 
 ```
 Now method `run` invokes `runFast`, which is compiled statically, `name` property is set directly with property setter `setName`.
