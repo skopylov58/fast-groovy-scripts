@@ -57,23 +57,23 @@ Create `ScriptCompileStaticTransformation` transformation. Constructor requires 
 Add this transformation to the `CompilerConfiguration` as compilation customizer. Then compile your code with `GroovyClassLoader` and run script providing Person parameter with binding.
 
 ```java
-        var trans = new ScriptCompileStaticTransformer("person", Person.class.getName(), "runFast");
+    var trans = new ScriptCompileStaticTransformer("person", Person.class.getName(), "runFast");
 
-        var cc = new CompilerConfiguration();
-        cc.addCompilationCustomizers(new ASTTransformationCustomizer(trans));
+    var cc = new CompilerConfiguration();
+    cc.addCompilationCustomizers(new ASTTransformationCustomizer(trans));
                 
-        GroovyClassLoader cl = new GroovyClassLoader(this.getClass().getClassLoader(), cc);
-        Class<?> clazz = cl.parseClass(script);
-        Script script = (Script) clazz.getConstructor().newInstance();
+    GroovyClassLoader cl = new GroovyClassLoader(this.getClass().getClassLoader(), cc);
+    Class<?> clazz = cl.parseClass(script);
+    Script script = (Script) clazz.getConstructor().newInstance();
         
-        script.setBinding(new Binding(Map.of("person", new Person)));
-        script.run();
+    script.setBinding(new Binding(Map.of("person", new Person)));
+    script.run();
 ```
 
 Lets compare effect of using transformation. Below is de-compiled script class without transformation. We can see that generated code is using Groovy run-time class `ScriptBytecodeAdapter` to set property `name` to `Peter`.
 
 ```java
-	public Object run() {
+    public Object run() {
         final String s = "Peter";
         ScriptBytecodeAdapter.setProperty((Object)s, (Class)null, invokedynamic(getProperty:(LScript_d3898d5a433b8e078e9312b6638140ff;)Ljava/lang/Object;, this), (String)"name");
         return s;
@@ -84,11 +84,11 @@ Lets compare effect of using transformation. Below is de-compiled script class w
 With using transformation, de-compiled class is the following:
 
 ```java
-	public Object run() {
+    public Object run() {
         return invokedynamic(invoke:(LScript_d3898d5a433b8e078e9312b6638140ff;Ljava/lang/Object;)Ljava/lang/Object;, this, invokedynamic(getProperty:(LScript_d3898d5a433b8e078e9312b6638140ff;)Ljava/lang/Object;, this));
     }
 
-	public Object runFast(final Person person) {
+    public Object runFast(final Person person) {
 		final String name = "Peter";
 		person.setName(name);
 		return name;
