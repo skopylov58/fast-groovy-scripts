@@ -25,9 +25,9 @@ import groovy.transform.CompileStatic;
 import groovyjarjarasm.asm.Opcodes;
 
 /**
- * Creates method _run_ and annotate it with CompileStatic
+ * AST transformation to run Groovy script with @CompileStatic annotation.
  * 
- * @author kopylov
+ * @author skopylov@gmail.com
  *
  */
 @GroovyASTTransformation(phase = CompilePhase.CONVERSION)
@@ -39,6 +39,12 @@ public class ScriptCompileStaticTransformer implements ASTTransformation {
 
     Statement code = null;
     
+    /*
+     * Constructor.
+     * @param paramName script parameter name
+     * @
+     * 
+     */
     public ScriptCompileStaticTransformer(String paramName, String className, String methodName) {
         this.paramName = paramName;
         this.className = className;

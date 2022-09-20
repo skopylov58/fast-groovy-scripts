@@ -19,7 +19,7 @@ import groovy.lang.Script;
 
 public class TransformerTest {
     
-    String script = "def name = p.name; p.name = 'Peter'\n";
+    String script = "/*def name = p.name;*/ p.name = 'Peter'\n";
     
     @Test
     public void testCompileDynamic() throws Exception {
