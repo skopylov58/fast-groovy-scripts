@@ -27,7 +27,6 @@ public class Script_xxxxxx {
     ...
 }
 ```
-
 You can try improve your's script performance in the following way:
 
 - move your business logic into separate method (say `runFast`)
@@ -97,6 +96,30 @@ With using transformation, de-compiled class is the following:
 ```
 Now method `run` invokes `runFast`, which is compiled statically, `name` property is set directly with property setter `setName`.
 
+### Understanding transformation
+
+`ScriptCompileStaticTransformer` implements `ASTTransformation` interface.
+Annotation `@GroovyASTTransformation(phase = CompilePhase.CONVERSION)` means this transformation will be applied in the conversion phase of compilation (when AST structure is created)
+
+```java
+@GroovyASTTransformation(phase = CompilePhase.CONVERSION)
+public class ScriptCompileStaticTransformer implements ASTTransformation {
+    ...
+}
+```
+Then following the `Visitor` design pattern, we create our own `MethodRunVisitor` which finds method `run`, stores user written code in the `code` class member for later using and replaces user code by `runFast` method invocation.
+And finally we create method `runFast` annotated with `@CompileStatic` and put user code inside this method.
+
+GroovyConsole utility (shipped with full groovy distribution) would be extremely useful for understanding AST internals.
+- run GroovyConsole
+- write simple script code
+- open AST browser and inspect how script code in converted to AST
+- make small changes in the script code and observe corresponding changes in the AST
+- implement this AST changes in your's transformation code
+- enjoy
+
+[<img src="img/GroovyConsole.png">]
+
 ### Error detection
 
 Another advantage of using @CompileStatic is early script error detection. Errors will be detected in compile time, whereas without @CompileStatic errors will be detected only in run-time. Below are sample errors:
@@ -120,6 +143,13 @@ Script_2637161c01bed4e063e059b11dd30207.groovy: 1: [Static type checking] - No s
 So using @CompileStatic will make your scripts not only more performant but also more reliable.
 
 ### Performance benchmarking
+
+For the benchmarking I have used simple script for testing performance of read/write operations on the bean's properties.
+
+```groovy
+def name = person.name
+person.name = 'Peter'
+```
 
 JMH benchmarking shows approximately 7 times improvements in script performance.
 

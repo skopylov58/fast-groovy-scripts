@@ -19,6 +19,7 @@ import groovy.lang.Script;
 
 public class TransformerTest {
     
+    private static final int LOOPS = 100_000_000;
     String script = "person.name = 'Peter'\n";
     
     @Test
@@ -30,11 +31,12 @@ public class TransformerTest {
         Script script = (Script) clazz.getConstructor().newInstance();
         Person p = new Person();
         script.setBinding(new Binding(Map.of("person", p)));
-        Instant now = Instant.now();
-        for (int i = 0; i < 100_000_000; i++) {
-            script.run();
-        }
-        System.out.println("Dynamic: " + Duration.between(now, Instant.now()));
+        Duration d = measure(() -> {
+            for (int i = 0; i < LOOPS; i++) {
+                script.run();
+            }
+        });
+        System.out.println("Dynamic: " + d);
 
         assertEquals("Peter", p.getName());
     }
@@ -53,15 +55,21 @@ public class TransformerTest {
         
         script.setBinding(new Binding(Map.of("person", p)));
 
-        Instant now = Instant.now();
-        for (int i = 0; i < 100_000_000; i++) {
-            script.run();
-        }
-        System.out.println("Static: " + Duration.between(now, Instant.now()));
+        Duration d = measure(() -> {
+            for (int i = 0; i < LOOPS; i++) {
+                script.run();
+            }
+        });
+        System.out.println("Static: " + d);
         
         assertEquals("Peter", p.getName());
     }
 
-
+    public static Duration measure(Runnable r) {
+        Instant start = Instant.now();
+        r.run();
+        Instant end = Instant.now();
+        return Duration.between(start, end);
+    }
 
 }

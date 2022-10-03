@@ -100,7 +100,6 @@ public class ScriptCompileStaticTransformer implements ASTTransformation {
             bs.addStatement(es);
             return bs;
         }
-    
     }
 }
 
