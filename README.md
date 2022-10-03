@@ -69,6 +69,8 @@ Add this transformation to the `CompilerConfiguration` as compilation customizer
     script.run();
 ```
 
+### Effect of transformation
+
 Lets compare effect of using this transformation. Below is de-compiled initial script class (without transformation). We can see that generated code is using Groovy run-time class `ScriptBytecodeAdapter` to set property `name` to `Peter`.
 
 ```java
