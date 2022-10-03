@@ -107,8 +107,11 @@ public class ScriptCompileStaticTransformer implements ASTTransformation {
     ...
 }
 ```
-Then following the `Visitor` design pattern, we create our own `MethodRunVisitor` which finds method `run`, stores user written code in the `code` class member for later using and replaces user code by `runFast` method invocation.
-And finally we create method `runFast` annotated with `@CompileStatic` and put user code inside this method.
+Then following the `Visitor` design pattern, we create our own `MethodRunVisitor` which 
+- finds method `run`,
+- stores user written code in the `code` class member for later using and 
+- replaces user code by `runFast` method invocation.
+- and finally creates method `runFast` annotated with `@CompileStatic` and put user code into this method.
 
 GroovyConsole utility (shipped with full groovy distribution) would be extremely useful for understanding AST internals.
 - run GroovyConsole
