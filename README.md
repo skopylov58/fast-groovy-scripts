@@ -1,6 +1,8 @@
 # fast-groovy-scripts
 
 ![example workflow](https://github.com/skopylov58/fast-groovy-scripts/actions/workflows/gradle.yml/badge.svg) 
+[![Habr.com publication](https://badgen.net/badge/habr.com/publication/green)](https://habr.com/ru/post/694878/)
+
 
 ## AST (Abstract Syntax Tree) transformation to run your Groovy scripts with @CompileStatic
 
